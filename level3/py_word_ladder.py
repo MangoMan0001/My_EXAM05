@@ -8,7 +8,39 @@
 変換シーケンスが不可能な場合は0を返します。
 """
 
+
+def _is_move(current: str, target: str) -> bool:
+    if len(current) != len(target):
+        return False
+
+    i = 0
+    for c, t in zip(current, target):
+        if c == t:
+            i += 1
+    return i == len(current) - 1
+
 def word_ladder(start: str, end: str, sentence: list[str]) -> int:
+    unused = set(sentence)
+
+    current = {start}
+    count = 1
+
+    while current:
+        if end in current:
+            return count
+
+        next_words = set()
+        for word in current:
+            for target in unused:
+                if _is_move(word, target):
+                    next_words.add(target)
+
+        unused -= next_words
+
+        current = next_words
+        count += 1
+
+    return 0
 
 
 if __name__ == "__main__":
